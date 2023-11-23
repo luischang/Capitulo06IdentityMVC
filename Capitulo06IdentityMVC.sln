@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34114.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capitulo06IdentityMVC.WEB", "Capitulo06IdentityMVC.WEB\Capitulo06IdentityMVC.WEB.csproj", "{FAA0C8AE-83BE-4957-BF53-0AEE9A3F3EB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capitulo06IdentityMVC.CORE", "Capitulo06IdentityMVC.CORE\Capitulo06IdentityMVC.CORE.csproj", "{1D034085-302A-406E-8AAA-0F588E6AAF10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAA0C8AE-83BE-4957-BF53-0AEE9A3F3EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA0C8AE-83BE-4957-BF53-0AEE9A3F3EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA0C8AE-83BE-4957-BF53-0AEE9A3F3EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA0C8AE-83BE-4957-BF53-0AEE9A3F3EB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D034085-302A-406E-8AAA-0F588E6AAF10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D034085-302A-406E-8AAA-0F588E6AAF10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D034085-302A-406E-8AAA-0F588E6AAF10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D034085-302A-406E-8AAA-0F588E6AAF10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC087B28-45C3-41D6-BFF0-BAF52DD8E4F9}
+	EndGlobalSection
+EndGlobal
