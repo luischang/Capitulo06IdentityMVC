@@ -35,7 +35,7 @@ namespace Capitulo06IdentityMVC.CORE.Repository
             var query = "INSERT INTO Customer (FirstName, LastName, City, Country, Phone) VALUES (@FirstName,@LastName,@City,@Country,@Phone)";
             _dbConnection.Execute(query, new
             {
-                customer.FistName,
+                customer.FirstName,
                 customer.LastName,
                 customer.City,
                 customer.Country,
@@ -49,7 +49,7 @@ namespace Capitulo06IdentityMVC.CORE.Repository
 
             _dbConnection.Execute(query, new
             {
-                customer.FistName,
+                customer.FirstName,
                 customer.LastName,
                 customer.City,
                 customer.Country,

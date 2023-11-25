@@ -2,6 +2,122 @@
 @{
     ViewBag.Title = "Index";
 }
+<div class="container">
+    @*Alert y boton agregar*@
+    <div class="alert alert-success">
+        <div class="row">
+            <div class="col-md-2">
+                <button id="btnAgregarCliente" class="btn btn-info">Agregar</button>
+            </div>
+            <div class="col-md-4">
+                <h4>Mantenimiento de Clientes</h4>
+            </div>
 
-<h2>Index</h2>
+        </div>
+    </div>
+
+
+    <div id="divListadoClientes">
+
+    </div>
+
+
+    @*Modal*@
+    <div class="modal fade" id="modalRegistroCliente" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mantenimiento de Clientes</h4>
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>First name</label>
+                                    <input type="text" class="form-control" id="txtNombre" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last name</label>
+                                    <input type="text" class="form-control" id="txtApellido" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input type="text" class="form-control" id="txtPais" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" id="txtCiudad" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" id="txtTelefono" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarCliente">Guardar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+<script>
+    CargarListadoCliente()
+    function CargarListadoCliente() {
+        $.ajax({
+            type: "GET",
+            //url: "Marketing/Customer/List",
+            url : "@Url.Action("List","Customer", new { Area = "Marketing"})",
+            cache: false,
+            success: function (listadoClientesHtml) {
+                $("#divListadoClientes").html(listadoClientesHtml);
+            }, error: function () {
+                alert("Ocurrió un error al obtener el listado de clientes....");
+            }
+        });
+    }
+
+    $("#btnAgregarCliente").click(function () {
+        $("#modalRegistroCliente").modal('show');        
+    });
+
+    $("#btnGuardarCliente").click(function () {
+        //Obtener los valores de la caja de texto del modal
+        let vNombre = $("#txtNombre").val();
+        let vApellido = $("#txtApellido").val();
+        let vPais = $("#txtPais").val();
+        let vCiudad = $("#txtCiudad").val();
+        let vTelefono = $("#txtTelefono").val();
+
+
+    });
+
+    
+
+
+</script>
 
