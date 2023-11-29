@@ -78,6 +78,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" id="btnGuardarCliente">Guardar</button>
+                    <input type="hidden" value="-1" id="hidIdCliente" />
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -86,6 +87,60 @@
 </div>
 
 <script>
+
+    $("#divListadoClientes").on('click', ".btnEliminarCliente", function () {
+        let vIdCliente = $(this).attr("data-idcliente");
+
+          $.ajax({
+            type: "GET",
+            url: "@Url.Action("Delete", "Customer", new { Area = "Marketing" })",
+            cache: false,
+            data: { id: vIdCliente },
+            success: function (success) {
+                console.log("Valor respuesta: " + success)
+                if (success) {
+                    alert("Se eliminó correctamente");
+                    CargarListadoCliente();
+                } else {
+                    alert("Ocurrió un error al elimnar el cliente");
+                }
+            },
+            error: function () {
+                alert("Ocurrió un error al elimnar el cliente");
+            }
+        });
+
+    });
+
+    $("#divListadoClientes").on('click', ".btnEditarCliente", function () {
+        let vIdCliente = $(this).attr("data-idcliente");
+        let myModal = $("#modalRegistroCliente");
+
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetCustomer", "Customer", new { Area = "Marketing" })",
+            cache: false,
+            data: { id: vIdCliente },
+            success: function (objCustomer) {
+                console.log("El valor del cliente es: " + JSON.stringify(objCustomer))
+                $("#txtNombre").val(objCustomer.FirstName);
+                $("#txtApellido").val(objCustomer.LastName);
+                $("#txtPais").val(objCustomer.Country);
+                $("#txtCiudad").val(objCustomer.City);
+                $("#txtTelefono").val(objCustomer.Phone);
+                $("#hidIdCliente").val(objCustomer.Id);
+                myModal.modal('show');
+            },
+            error: function () {
+                alert("Ocurrió un error al obtener el cliente");
+            }
+        });
+
+
+    });
+
+
     CargarListadoCliente()
     function CargarListadoCliente() {
         $.ajax({
@@ -102,7 +157,7 @@
     }
 
     $("#btnAgregarCliente").click(function () {
-        $("#modalRegistroCliente").modal('show');        
+        $("#modalRegistroCliente").modal('show');
     });
 
     $("#btnGuardarCliente").click(function () {
@@ -112,11 +167,41 @@
         let vPais = $("#txtPais").val();
         let vCiudad = $("#txtCiudad").val();
         let vTelefono = $("#txtTelefono").val();
+        let vIdCliente = $("#hidIdCliente").val();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Save","Customer", new { Area = "Marketing"})",
+            cache: false,
+            data: {
+                Id: vIdCliente,
+                FirstName: vNombre,
+                LastName: vApellido,
+                City: vCiudad,
+                Country: vPais,
+                Phone: vTelefono
+            },
+            success: function (response) {
+                if (response) {
+                    alert("Se registró correctamente");
+                    CargarListadoCliente();
+                    $("#modalRegistroCliente").modal('hide');
+                } else {
+                    alert("No se pudo actualizar la información del cliente");
+                }
+            },
+            error: function () {
+                alert("Ocurrió un error en el servidor....");
+            }
+
+        });
+
+
 
 
     });
 
-    
+
 
 
 </script>

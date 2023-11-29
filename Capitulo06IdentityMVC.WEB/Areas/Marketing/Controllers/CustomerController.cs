@@ -1,4 +1,5 @@
-﻿using Capitulo06IdentityMVC.CORE.Repository;
+﻿using Capitulo06IdentityMVC.CORE.Model;
+using Capitulo06IdentityMVC.CORE.Repository;
 using Capitulo06IdentityMVC.WEB.Models;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,81 @@ namespace Capitulo06IdentityMVC.WEB.Areas.Marketing.Controllers
             }).ToList();
 
             return PartialView(customerList);
+        }
+        //Insert or Update
+        public JsonResult Save(CustomerViewModel customerViewModel)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                if (customerViewModel.Id == -1)
+                {
+                    //Es un nuevo registro
+                    var customer = new Customer()
+                    {
+                        FirstName = customerViewModel.FirstName,
+                        LastName = customerViewModel.LastName,
+                        City = customerViewModel.City,
+                        Country = customerViewModel.Country,
+                        Phone = customerViewModel.Phone
+                    };
+
+                    _customerRepository.Add(customer);
+                }
+                else
+                {
+                    //Un cliente existente
+                    var customer = new Customer()
+                    {
+                        Id = customerViewModel.Id,
+                        FirstName = customerViewModel.FirstName,
+                        LastName = customerViewModel.LastName,
+                        City = customerViewModel.City,
+                        Country = customerViewModel.Country,
+                        Phone = customerViewModel.Phone
+                    };
+
+                    _customerRepository.Update(customer);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+            }
+            return Json(isSuccess);
+
+        }
+
+        public JsonResult GetCustomer(int id)
+        {
+            var customer = _customerRepository.GetById(id);
+            var customerViewModel = new CustomerViewModel()
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Country = customer.Country,
+                City = customer.City,
+                Phone = customer.Phone
+            };
+            return Json(customerViewModel, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Delete(int id)
+        {
+            bool isSuccess = true;
+            try
+            {
+                _customerRepository.Delete(id);
+            }
+            catch (Exception)
+            {
+
+                isSuccess = false;
+            }
+            return Json(isSuccess, JsonRequestBehavior.AllowGet);
         }
     }
 }
