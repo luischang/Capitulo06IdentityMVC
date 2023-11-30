@@ -64,5 +64,25 @@ namespace Capitulo06IdentityMVC.CORE.Repository
             _dbConnection.Execute(query, new { Id = id });
         }
 
+        public IEnumerable<Customer> GetPaged(int pageNumber, int pageSize)
+        {
+            int offset = (pageNumber - 1) * pageSize;
+            string query = $"SELECT  * FROM  Customer ORDER BY Id OFFSET {offset} ROWS FETCH NEXT {pageSize} ROWS ONLY";
+            return _dbConnection.Query<Customer>(query);
+        }
+
+        public IEnumerable<Customer> GetPagedByLastName(int pageNumber, int pageSize, string lastName)
+        {
+            int offset = (pageNumber - 1) * pageSize;
+            string query = $"SELECT  * FROM  Customer WHERE LastName LIKE @lastName ORDER BY Id OFFSET {offset} ROWS FETCH NEXT {pageSize} ROWS ONLY";
+            return _dbConnection.Query<Customer>(query, new { LastName = $"%{lastName}%"});
+        }
+
+        public int GetCountByLastName(string lastName)
+        {
+            string query = $"SELECT COUNT(*) FROM Customer WHERE LastName LIKE @lastName";
+            return _dbConnection.ExecuteScalar<int>(query, new { LastName = $"%{lastName}%" });
+        }
+
     }
 }

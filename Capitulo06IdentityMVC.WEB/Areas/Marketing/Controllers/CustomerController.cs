@@ -24,9 +24,9 @@ namespace Capitulo06IdentityMVC.WEB.Areas.Marketing.Controllers
             return View();
         }
 
-        public ActionResult List()
+        public ActionResult List(int pageNumber = 1, int pageSize = 10, string searchText = "")
         {
-            var customers = _customerRepository.GetAll();
+            //var customers = _customerRepository.GetAll();
             //var customerList = new List<CustomerViewModel>();
             //foreach (var item in customers)
             //{
@@ -41,6 +41,10 @@ namespace Capitulo06IdentityMVC.WEB.Areas.Marketing.Controllers
             //    customerList.Add(customer);
             //}
 
+            var customers = string.IsNullOrEmpty(searchText) ?
+                            _customerRepository.GetPaged(pageNumber, pageSize) :
+                            _customerRepository.GetPagedByLastName(pageNumber, pageSize, searchText);
+
             var customerList = customers.Select(item => new CustomerViewModel
             {
                 Id = item.Id,
@@ -50,6 +54,14 @@ namespace Capitulo06IdentityMVC.WEB.Areas.Marketing.Controllers
                 City = item.City,
                 Phone = item.Phone
             }).ToList();
+
+            var totalCustomers = string.IsNullOrEmpty(searchText) ?
+                                    _customerRepository.GetAll().Count() :
+                                    _customerRepository.GetCountByLastName(searchText);
+
+
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCustomers / pageSize);
+            ViewBag.TotalRows = totalCustomers;
 
             return PartialView(customerList);
         }

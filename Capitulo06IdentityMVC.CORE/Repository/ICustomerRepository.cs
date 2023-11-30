@@ -10,5 +10,9 @@ namespace Capitulo06IdentityMVC.CORE.Repository
         IEnumerable<Customer> GetAll();
         Customer GetById(int id);
         void Update(Customer customer);
+        IEnumerable<Customer> GetPaged(int pageNumber, int pageSize);
+        IEnumerable<Customer> GetPagedByLastName(int pageNumber, int pageSize, string lastName);
+        int GetCountByLastName(string lastName);
+
     }
 }
