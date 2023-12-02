@@ -2,6 +2,7 @@
 using Owin;
 
 [assembly: OwinStartupAttribute(typeof(Capitulo06IdentityMVC.WEB.Startup))]
+[assembly: OwinStartup(typeof(Capitulo06IdentityMVC.WEB.Startup))]
 namespace Capitulo06IdentityMVC.WEB
 {
     public partial class Startup
@@ -9,6 +10,7 @@ namespace Capitulo06IdentityMVC.WEB
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }

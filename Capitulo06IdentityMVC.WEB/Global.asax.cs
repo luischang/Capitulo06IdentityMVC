@@ -57,6 +57,8 @@ namespace Capitulo06IdentityMVC.WEB
             container.Register<ICustomerRepository>
                 (() => new CustomerRepository(container.GetInstance<IDbConnection>()));
 
+            container.Register<IMessageRepository>(() => new MessageRepository(container.GetInstance<IDbConnection>()));
+
             container.Register<IAuthenticationManager>
                 (() => HttpContext.Current.GetOwinContext().Authentication, Lifestyle.Singleton);
 
