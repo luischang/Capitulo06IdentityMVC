@@ -2,6 +2,16 @@
     ViewBag.Title = "Chat";
 }
 <h2>Chat</h2>
+
+<style>
+    .currentUserMessage {
+        color:green;
+    }
+
+    .otherUserMessage {
+        color:blue;
+    }
+</style>
 <div class="container">
     <div>
         <label>Current User: </label>
@@ -52,8 +62,10 @@
             var chat = $.connection.chatHub;
             // Create a function that the hub can call back to display messages.
             chat.client.addNewMessageToPage = function (name, message) {
+                var isCurrentUser = name === $("#displayname").val();
+                var cssClass = isCurrentUser ? 'currentUserMessage' : 'otherUserMessage';
                 // Add the message to the page.
-                $('#discussion').append('<li><strong>' + htmlEncode(name)
+                $('#discussion').append('<li class="' + cssClass + '"><strong>' + htmlEncode(name)
                     + '</strong>: ' + htmlEncode(message) + '</li>');
             };
             // Get the user name and store it to prepend to messages.
@@ -66,10 +78,26 @@
             $.connection.hub.start().done(function () {
                 $('#sendmessage').click(function () {
                     // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val());
+                    //chat.server.send($('#displayname').val(), $('#message').val());
+                    var selectedGroup = $("#groupSelector").val();
+                    chat.server.sendToGroup(selectedGroup, $('#displayname').val(), $('#message').val());
+
+                    //Add message to database
+                    insertMessageToDatabase($('#displayname').val(), $('#message').val());
+
                     // Clear text box and reset focus for next comment.
                     $('#message').val('').focus();
                 });
+            });
+
+            $("#joinGroup").click(function () {
+                $("#discussion").empty();
+                var selectedGroup = $("#groupSelector").val();
+                chat.server.joinGroup(selectedGroup);
+                $("#currentGroup").text(selectedGroup);
+
+                //Load history messages 
+                loadGroupHistory(selectedGroup);
             });
 
             $('.emoticon').click(function () {
@@ -81,10 +109,53 @@
             function insertEmoticon(emoticon) {
                 $("#message").val($("#message").val() + emoticon).focus();
             }
+
+            function insertMessageToDatabase(name, message) {
+                $.ajax({
+                    url: "@Url.Action("InsertMessage","Home", new { Area="Marketing"})",
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        UserName: name,
+                        GroupName: $("#groupSelector").val(),
+                        Content: message
+                    },
+                    success: function () {
+                        console.log("Se registró correctamente el mensaje en base de datos");
+                    },
+                    error: function () {
+                        console.log("Ocurrió un error al insertar el mensaje en la base de datos..");
+                    }
+                });
+            }
+
+            function loadGroupHistory(groupName) {
+                $.ajax({
+                    url: "@Url.Action("GetGroupHistory", "Home", new { Area="Marketing"})",
+                    type: "GET",
+                    data: {
+                        groupName: groupName
+                    },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var isCurrentUser = data[i].UserName === $("#displayname").val();
+                            var cssClass = isCurrentUser ? 'currentUserMessage' : 'otherUserMessage';
+                            let formattedMessage = '<li class="' + cssClass +'"> <strong>' + data[i].UserName + ' </strong>: ' + data[i].Content + '</li>';
+                            $("#discussion").append(formattedMessage);
+                        }
+                    },
+                    error: function () {
+                       console.log("Ocurrió un error al obtener el histórico de mensajes desde la BD")
+                    }
+                });
+            }
+
+
+
         });
 
 
-        
+
 
 
         // This optional function html-encodes messages for display in the page.
